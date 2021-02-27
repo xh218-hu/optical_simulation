@@ -111,19 +111,13 @@ yf_abs = yf_abs/np.max(yf_abs)
 # A Fourier lens has a focal length of 10 cm
 f = 10
 
-# # Wavelength of the plane wave is 0.5 um
-# wl = 0.5
-
 fs = 1/delta_x
 
 u = (fs/N_grating)*np.linspace(-(N_grating+2*m)/2,(N_grating+2*m)/2-1,N_grating+2*m)
 
-# u = u*10**(4)
-
 xf = u*(wl*f)
 
-
-# Plot the PSF
+# Plot diffraction pattern.
 plt.figure(5)
 plt.plot(xf,yf_abs)
 plt.xlim(-25,25)
