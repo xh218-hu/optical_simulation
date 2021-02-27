@@ -1,7 +1,7 @@
 # 1D point spread function (PSF) of a low-pass filter
 # Create a retangular shape low-pass filter, the pupil mask is an amplitude mask
 # Size of the 1D amplitude mask is 3 cm, wavelength is 0.5 um
-# Uploaded to GitHub
+# Uploaded to GitHub, the code is written in Python.
 
 import matplotlib.pyplot as plt
 import numpy as np
