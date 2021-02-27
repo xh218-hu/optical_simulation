@@ -1,0 +1,99 @@
+
+# 1D binary amplitiude grating Fraunhofer diffraction
+# Illuminated by a Guassian plane wave
+
+import numpy as np
+from scipy import signal
+import matplotlib.pyplot as plt
+
+# Number of sample points. For FFT algorithm, this number is usually a power of 2.
+N = 2**10
+
+# Sampling frequency
+fs = 100
+
+x = (1/fs)*np.linspace(-N/2,N/2-1,N)
+
+# Period and duty of the retangular grating in cm, width is 0.5 cm, duty is 50%..
+p = 1
+
+y_sign = 0.5*(signal.square(2 * np.pi * (1/p) * (x+p/4), duty=0.5) + 1)
+
+# Truncated square function with a length of L.
+# Here it is a multiple of p,however, it is not necessary to be a multiple of p.
+
+L = 9*p
+
+y_trunc = np.zeros(N)
+
+for i in range(N):
+    if x[i] > -L/2 and x[i] < L/2: 
+        y_trunc[i] = 1
+
+# Illuminated by a Guassian plane wave.
+
+y_gauss = signal.gaussian(N, std=150)
+plt.figure(1)
+plt.plot(x, y_gauss, 'b')
+plt.title(r"Gaussian illumination ($\sigma$=300)")
+plt.ylabel("Amplitude (a.u.)")
+plt.xlabel("x (cm)")
+plt.grid()
+plt.show()
+
+
+# Illumination window with a size of L.
+plt.figure(2)
+plt.plot(x, y_sign)
+plt.plot(x, y_trunc, 'r', linewidth=3)
+plt.title('Illumination window')
+plt.ylabel("Amplitude (a.u.)")
+plt.xlabel("x (cm)")
+plt.xlim(-5, 5)
+plt.grid()
+plt.show()
+
+# The amplitude profile.
+y = y_sign*y_trunc*y_gauss
+
+plt.figure(3)
+plt.plot(x, y)
+plt.title('Amplitude profile of the 1D grating')
+plt.ylabel("Amplitude (a.u.)")
+plt.xlabel("x (cm)")
+plt.xlim(-5, 5)
+plt.grid()
+plt.show()
+
+
+# Electric field on the Fourier plane is the FFT.
+yShift = np.fft.fftshift(y)
+fftyShift = np.fft.fft(yShift)
+yf = np.fft.fftshift(fftyShift)
+
+# Normalise the intensity
+yf_abs = np.abs(yf)
+yf_abs = yf_abs/np.max(yf_abs)
+
+# Define x cooridnate in the image plane
+
+# A Fourier lens has a focal length of 20 cm
+f = 20
+
+# Wavelength of the plane wave is 0.5 um
+wl = 0.5
+
+u = (fs/N)*np.linspace(-N/2,N/2-1,N)
+
+# Scale u and get the x-axis in the image plane. The unit is in um.
+xf = u*(wl*f)
+
+# Plot diffraction pattern.
+plt.figure(3)
+plt.plot(xf,yf_abs)
+plt.xlim(-80,80)
+plt.xlabel('u (um)')
+plt.ylabel('Intensity (a.u.)')
+plt.title('Intensity distribution of the 1D diffraction grating')
+plt.grid()
+plt.show()
