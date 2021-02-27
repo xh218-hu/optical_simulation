@@ -79,8 +79,7 @@ plt.show()
 y_phase = y_amp * y_grating * phase_delay
 
 plt.figure(4)
-# plt.plot(x_grating,y_amp,'r', linewidth=5)
-plt.plot(x_grating,y_phase)
+plt.plot(x_grating,y_phase,'g')
 plt.xlabel('x (um)')
 plt.ylabel('Phase (rad)')
 plt.title('Phase')
