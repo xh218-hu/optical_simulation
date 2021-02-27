@@ -1,0 +1,86 @@
+# 1D point spread function (PSF) of a phase only pupil filter
+# Create a retangular shape phase pupil mask
+# Size of the 1D mask is 3 cm, wavelength is 0.5 um
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Number of sample points. For FFT algorithm, this number is usually a power of 2.
+N = 2**14
+
+# Sampling frequency
+fs = 100
+
+x = (1/fs)*np.linspace(-N/2,N/2-1,N)
+
+# Set the size of the 1D amplitude only pupil mask in cm
+y_amp = np.zeros(N)
+
+for n in range(N):
+    if x[n] > -1.5 and x[n] < 1.5: 
+        y_amp[n] = 1
+
+# Plot the amplitude profile of the pupil mask
+plt.figure(1)
+plt.plot(x,y_amp)
+plt.xlim(-3,3)
+plt.xlabel('x (cm)')
+plt.ylabel('Amplitude (a.u.)')
+plt.title('Amplitude of the phase pupil mask')
+plt.grid()
+plt.show()
+
+# Set the phase of the pupil mask
+# Size of the 1D phase mask is 1 cm, phase delay is pi/2
+y_phase = np.zeros(N)
+
+for m in range(N):
+    if x[m] > -0.5 and x[m] < 0.5: 
+        y_phase[m] = np.pi/2
+
+
+# Plot the phase profile of the pupil mask
+plt.figure(2)
+plt.plot(x,y_phase, 'g')
+plt.xlim(-3,3)
+plt.xlabel('x (cm)')
+plt.ylabel('Phase (rad)')
+plt.title('Phase of the phase pupil mask')
+plt.grid()
+plt.show()
+
+
+# Amplitude PSF is the FFT of the pupil mask
+
+y = y_amp*np.exp(1j*y_phase)
+
+yShift = np.fft.fftshift(y)
+fftyShift = np.fft.fft(yShift)
+yf = np.fft.fftshift(fftyShift)
+
+# Normalise the intensity
+yf_abs = np.abs(yf)
+yf_abs = yf_abs/np.max(yf_abs)
+
+# Define x cooridnate in the image plane
+
+# A Fourier lens has a focal length of 20 cm
+f = 20
+
+# Wavelength of the plane wave is 0.5 um
+wl = 0.5
+
+u = (fs/N)*np.linspace(-N/2,N/2-1,N)
+
+# Scale u and get the x-axis in the image plane. The unit is in um.
+xf = u*(wl*f)
+
+# Plot the intensity PSF
+plt.figure(3)
+plt.plot(xf,yf_abs)
+plt.xlim(-20,20)
+plt.xlabel('u (um)')
+plt.ylabel('PSF (a.u.)')
+plt.title('PSF of the phase pupil mask')
+plt.grid()
+plt.show()
