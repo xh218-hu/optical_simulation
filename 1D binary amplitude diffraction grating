@@ -72,8 +72,8 @@ fftyShift = np.fft.fft(yShift)
 yf = np.fft.fftshift(fftyShift)
 
 # Normalise the intensity
-yf_abs = np.abs(yf)
-yf_abs = yf_abs/np.max(yf_abs)
+y_intensity = (np.abs(yf))**2
+y_intensity = y_intensity/np.max(y_intensity)
 
 # Define x cooridnate in the image plane
 
@@ -90,7 +90,7 @@ xf = u*(wl*f)
 
 # Plot diffraction pattern.
 plt.figure(3)
-plt.plot(xf,yf_abs)
+plt.plot(xf,y_intensity)
 plt.xlim(-80,80)
 plt.xlabel('u (um)')
 plt.ylabel('Intensity (a.u.)')
