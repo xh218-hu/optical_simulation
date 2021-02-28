@@ -6,7 +6,7 @@ from scipy import signal
 import matplotlib.pyplot as plt
 
 # Number of sample points. For FFT algorithm, this number is usually a power of 2.
-N = 2**10
+N = 2**20
 
 # Sampling frequency
 fs = 100
@@ -34,9 +34,10 @@ for i in range(N):
 y_gauss = signal.gaussian(N, std=150)
 plt.figure(1)
 plt.plot(x, y_gauss, 'b')
-plt.title(r"Gaussian illumination ($\sigma$=300)")
+plt.title('Gaussian illumination')
 plt.ylabel("Amplitude (a.u.)")
 plt.xlabel("x (cm)")
+plt.xlim(-5, 5)
 plt.grid()
 plt.show()
 
