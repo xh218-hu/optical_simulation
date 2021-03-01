@@ -76,7 +76,7 @@ plt.show()
 
 # Phase delay of for this illimination
 
-y_phase = y_amp * y_grating * phase_delay
+y_phase = y_grating * phase_delay
 
 plt.figure(4)
 plt.plot(x_grating,y_phase,'g')
@@ -88,7 +88,7 @@ plt.show()
 
 # Amplitude PSF is the FFT of the pupil mask
 
-y = np.exp(1j*y_phase)
+y = y_amp*np.exp(1j*y_phase)
 
 # Pad zeros
 
@@ -109,17 +109,13 @@ y_intensity = y_intensity/np.max(y_intensity)
 
 # A Fourier lens has a focal length of 10 cm
 f = 10
-
-fs = 1/delta_x
-
-u = (fs/N_grating)*np.linspace(-(N_grating+2*m)/2,(N_grating+2*m)/2-1,N_grating+2*m)
-
+u = np.linspace(-(N_grating+2*m)/2,(N_grating+2*m)/2-1,N_grating+2*m)/(delta_x*(N_grating+2*m))
 xf = u*(wl*f)
 
 # Plot diffraction pattern.
 plt.figure(5)
 plt.plot(xf,y_intensity)
-plt.xlim(-25,25)
+plt.xlim(-10,10)
 plt.xlabel('u (cm)')
 plt.ylabel('Intensity (a.u.)')
 plt.title('Diffraction of the 1D phase only grating')
